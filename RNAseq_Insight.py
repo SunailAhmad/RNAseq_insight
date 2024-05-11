@@ -12,12 +12,15 @@ import scanpy as sc
 import time
 import requests
 import gseapy
-from gseapy.plot import dotplot, barplot
-from streamlit_lottie import st_lottie # type: ignore
+from gseapy.plot import barplot
+from streamlit_lottie import st_lottie
+
+import sys  # Ensure sys module is imported
+
 st.set_page_config("RNAseq Analyzer")
 
 with open('style.css') as f:
-    st.markdown(f"<style>{f.read()}</style>",unsafe_allow_html=True)
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def load_lottieurl(url:str):
     r=requests.get(url)
@@ -74,14 +77,6 @@ def data_filteration(df):
     metadata_df = pd.DataFrame({'Sample': counts.index, 'Condition': counts.index.str[:2]})
     
     return counts, metadata_df
-def display_guide():
-    st.title("Welcome to SSBPRNAseq Analyzer")
-    st.subheader("Guide for Using the App")
-    st.write("1. Upload your RNA-seq data file in CSV or TXT format using the file uploader on the left sidebar.")
-    st.write("2. After uploading the file, choose an analysis option from the sidebar to perform different analyses on your data.")
-    st.write("3. Follow the instructions provided under each analysis option to proceed with the analysis.")
-    st.write("4. Once the analysis is completed, you will see the results displayed on the main panel.")
-
 
 def create_deseq_dataset(counts, metadata_df):
     st.write("DESeq2 Analysis")
@@ -195,8 +190,8 @@ def visualize_results(res):
 
     # Show the plot in Streamlit
     st.pyplot(fig)
+
 def pca(res):
-    
     try:
         # Perform PCA
         res = res.dropna()
@@ -224,7 +219,6 @@ def pca(res):
     except Exception as e:
         st.error(f"An error occurred during PCA analysis: {e}")
         return None
-    
 
 def Gene_Pathway(res):
     all_symbols_list = res['Symbol'].astype(str).unique().tolist()
@@ -263,11 +257,14 @@ def Gene_Pathway(res):
     barplot(res.results, top_term=10, figsize=(8, 6), title='Enrichment Analysis',
         save='barplot.png')
 
-    
 
-
-
-
+def display_guide():
+    st.title("Welcome to SSBPRNAseq Analyzer")
+    st.subheader("Guide for Using the App")
+    st.write("1. Upload your RNA-seq data file in CSV or TXT format using the file uploader on the left sidebar.")
+    st.write("2. After uploading the file, choose an analysis option from the sidebar to perform different analyses on your data.")
+    st.write("3. Follow the instructions provided under each analysis option to proceed with the analysis.")
+    st.write("4. Once the analysis is completed, you will see the results displayed on the main panel.")
 
 def main():
     # st.title("*PyDESeq2 Analysis* \U0001F9EC")
@@ -297,7 +294,6 @@ def main():
         'Data Filtration': "\U0001F50E",   # Unicode for magnifying glass
         'Create DESeq dataset': "\U0001F4DD"  # Unicode for notebook
         
-        
     }
     st.sidebar.divider()
     opt = st.sidebar.radio('Select analysis', list(opt_unicode.keys()), format_func=lambda x: f"{opt_unicode[x]} {x}")
@@ -321,8 +317,6 @@ def main():
     # Clear the progress bar and text
     progress_bar.empty()
     progress_text.empty()
-
-
 
 if __name__ == "__main__":
     main()
