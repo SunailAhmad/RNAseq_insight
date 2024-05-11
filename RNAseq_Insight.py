@@ -276,7 +276,7 @@ def main():
     
     if uploaded_file is None:
         # Display Lottie animation if no file is uploaded
-        lottie_logo = load_lottieurl(url="https://lottie.host/e81aa233-7e5b-4611-a76d-6e189019de27/zaV7XyRxyz.json")
+        lottie_logo = load_lottieurl(url="https://lottie.host/7397f866-d481-4aae-9c48-69c5345f4d65/F9EyPLtJzM.json")
         st_lottie(lottie_logo, key='hello')
         # st.warning("Please upload a file.")
         return
